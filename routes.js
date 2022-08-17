@@ -2,12 +2,20 @@
 // You should commit this file to source control.
 import { Router } from '@layer0/core/router'
 import { nextRoutes } from '@layer0/next'
+import {CustomCacheKey} from "@layer0/core/router";
 
 // Remove this line to suppress Next's default behavior of removing trailing slashes via a redirect.
 // If trailingSlash: true is set in next.config.js, removing this line will remove the redirect that adds the trailing slash.
 nextRoutes.setEnforceTrailingSlash(true)
 
 const cacheConfig = {
+    key:
+        new CustomCacheKey()
+            .excludeAllQueryParametersExcept(
+            "q", "discontinued", "amp", "page", "srule", "all", "locale", "ids", "configSlotId", "ocapiSlotIds", "frpId", "pers", "groupId", "preferenceId", "src", "isSPC", "isFPC", "preselectColor", "tangibleeIds", "purchase_amount", "__storeId", "__category", "__content", "recipe", "index", "__path", "__headless", "products", "zipCode", "startFrom", "pmin", "pmax", "color", "colorVal", "size", "heelHeight", "heelHeightVal", "filterCategory", "isOutlet", "model", "isEarlyAccess", "isEmployeeSale", "gender", "onlineExclusive", "material", "materialVal", "bagSize", "fabrication", "sustainableMaterials", "hardwareColor", "styleGroup", "prefn1", "prefv1", "merchandiseClass", "department"
+            )
+            .addCookie('currency')
+    ,
     browser: {
         maxAgeSeconds: 0, // disabled
         serviceWorkerSeconds: 60, // 1 minute
@@ -20,7 +28,7 @@ const cacheConfig = {
 };
 
 export default new Router()
-.match('/api/item/:id', ({ cache }) => {
+.match('/api/shop/:slug*', ({ cache }) => {
     cache(cacheConfig);
 })
 .match('/api/img/:id', ({ cache }) => {

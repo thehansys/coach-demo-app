@@ -5,7 +5,7 @@ import { LazyLoadImage } from 'react-lazy-load-image-component';
 
 async function getItem(id){
     try{
-        const res = await fetch(`/api/item/${id}`)
+        const res = await fetch(`/api/shop/${id}/view-all?gender=Women&__v__=zKryCEzxHtGzm_gfCn6BH`)
         return (await res.json()).data;
     }catch(e){
         return null;
@@ -37,7 +37,7 @@ export default function Women(props) {
 
     let itemsHtml = [];
     items.forEach((item, i) => {
-        let prefetchItemUrl = `/api/item/${i + props.page*props.perPage + 1}`; // prefetch future items
+        let prefetchItemUrl = `/api/shop/${i + props.page*props.perPage + 1}/view-all?gender=Women&__v__=zKryCEzxHtGzm_gfCn6BH`; // prefetch future items
         itemsHtml.push(
             <Fragment key={`item-${i}`}>
                 <Prefetch url={prefetchItemUrl}>

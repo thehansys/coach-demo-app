@@ -15,10 +15,11 @@ export default function handler(req, res) {
         "Soft Tabby Hobo"
     ];
     try{
-        let id = parseInt(req.query.id);
+        let id = parseInt(req.query["slug"][0]);
         res.status(200).json({
             data : {
                 id : id,
+                slug : req.query["slug"],
                 title : titles[id % titles.length],
                 price : randomIntFromInterval(1,500),
                 img : `/api/img/${id}`
