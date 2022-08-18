@@ -9,13 +9,6 @@ import {CustomCacheKey} from "@layer0/core/router";
 nextRoutes.setEnforceTrailingSlash(true)
 
 const cacheConfig = {
-    key:
-        new CustomCacheKey()
-            .excludeAllQueryParametersExcept(
-            "q", "discontinued", "amp", "page", "srule", "all", "locale", "ids", "configSlotId", "ocapiSlotIds", "frpId", "pers", "groupId", "preferenceId", "src", "isSPC", "isFPC", "preselectColor", "tangibleeIds", "purchase_amount", "__storeId", "__category", "__content", "recipe", "index", "__path", "__headless", "products", "zipCode", "startFrom", "pmin", "pmax", "color", "colorVal", "size", "heelHeight", "heelHeightVal", "filterCategory", "isOutlet", "model", "isEarlyAccess", "isEmployeeSale", "gender", "onlineExclusive", "material", "materialVal", "bagSize", "fabrication", "sustainableMaterials", "hardwareColor", "styleGroup", "prefn1", "prefv1", "merchandiseClass", "department"
-            )
-            .addCookie('currency')
-    ,
     browser: {
         maxAgeSeconds: 0, // disabled
         serviceWorkerSeconds: 60, // 1 minute
@@ -28,12 +21,21 @@ const cacheConfig = {
 };
 
 export default new Router()
+
+// This route generates regex in "__layer0__/cache-manifest.js" which catches all prefetch requests
+// but doesn't have set cache config with serviceWorkerSeconds so onlyCachePrefetches will be set to true
+.match('/:path*', ({ setResponseHeader }) => {
+    setResponseHeader('x-xss-protection', ' 1; mode=block')
+})
+
 .match('/api/shop/:slug*', ({ cache }) => {
     cache(cacheConfig);
 })
+
 .match('/api/img/:id', ({ cache }) => {
     cache(cacheConfig);
 })
+
 .match('/service-worker.js', ({ serviceWorker }) => {
     return serviceWorker('.next/static/service-worker.js')
 })
